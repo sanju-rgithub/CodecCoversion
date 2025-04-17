@@ -79,12 +79,28 @@ func main() {
 
   // Step 2: Convert µ-law to 16-bit PCM with upsampling
   var pcmData []int16
-  for _, b := range rawData {
+  // Processing 160-byte chunks
+ chunkSize := 160
+ for i := 0; i < len(rawData); i += chunkSize {
+  end := i + chunkSize
+  if end > len(rawData) {
+   end = len(rawData)
+  }
+  chunk := rawData[i:end]
+
+  for _, b := range chunk {
+   pcm := muLawToPCM(b)
+
+   // Upsample 8kHz ➜ 16kHz 
+   pcmData = append(pcmData, pcm, pcm)
+  }
+}
+  /*for _, b := range rawData {
     sample := muLawToPCM(b)
 
-    // Upsample from 8kHz ➜ 16kHz (simple method: duplicate each sample)
-    pcmData = append(pcmData, sample, sample)
-  }
+    // Upsample from 8kHz ➜ 16kHz 
+    pcmData = append(pcmData, sample, sample)*/
+  
 
   // Step 3: Create output WAV file
   output, err := os.Create("output.wav")
