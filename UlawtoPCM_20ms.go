@@ -78,7 +78,7 @@ func main() {
     return
   }
 
-  // Step 2: Convert µ-law to 16-bit PCM with upsampling using goroutine + channel + ticker
+  // Step 2: Convert µ-law to 16-bit PCM with upsampling using threads
   var pcmData []int16
   chunkSize := 160
   chunkChan := make(chan []byte)
